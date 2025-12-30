@@ -1,0 +1,176 @@
+openapi: 3.0.3
+info:
+  title: HRMS Backend API
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiSuccess"
+              example:
+                ok: true
+                data:
+                  status: ok
+  /api:
+    post:
+      summary: Action dispatcher (GAS doPost compatible)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiRequest"
+      responses:
+        "200":
+          description: Success or error (always JSON)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Rate limited
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+components:
+  schemas:
+    ApiRequest:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+          enum:
+            - ADMIN_EXCEL_MARKS_SUBMIT
+            - AUTO_REJECT_FINAL_NOSHOW
+            - AUTO_REJECT_INPERSON_LOW
+            - AUTO_REJECT_NOTPICK
+            - CANDIDATE_ADD
+            - CANDIDATE_BULK_ADD
+            - COPY_TEMPLATE_DATA
+            - DOCS_COMPLETE
+            - DOCS_UPLOAD
+            - EA_TECH_MARKS_SUBMIT
+            - EMPLOYEE_CREATE_FROM_CANDIDATE
+            - EMPLOYEE_GET
+            - EMPLOYEE_LOGIN
+            - FILE_UPLOAD_CV
+            - FINAL_INTERVIEW_LIST
+            - FINAL_SEND_OWNER
+            - GET_ME
+            - HOLD_EXPIRY_CRON
+            - HOLD_REVERT
+            - HR_FINAL_HOLD_LIST
+            - HR_HOLD_SCHEDULE
+            - HR_REQUIREMENTS_LIST
+            - HR_WALKIN_SCHEDULE
+            - INPERSON_MARKS_SAVE
+            - INPERSON_PIPELINE_LIST
+            - JOBPOST_COMPLETE
+            - JOBPOST_INIT
+            - JOBPOST_MARK_PORTAL
+            - JOBPOST_SET_PORTALS
+            - JOBPOST_UPLOAD_SCREENSHOT
+            - JOINING_LIST
+            - JOINING_SET_DATE
+            - LOGIN_EXCHANGE
+            - LOGS_QUERY
+            - MARK_JOIN
+            - MY_PERMISSIONS_GET
+            - OWNER_CANDIDATES_LIST
+            - OWNER_DECIDE
+            - OWNER_FINAL_DECIDE
+            - PASSFAIL_EVALUATE
+            - PERMISSIONS_LIST
+            - PERMISSIONS_UPSERT
+            - PRECALL_LIST
+            - PRECALL_UPDATE
+            - PREINTERVIEW_MARKS_SAVE
+            - PREINTERVIEW_STATUS
+            - PROBATION_DECIDE
+            - PROBATION_LIST
+            - PROBATION_SET
+            - REJECT_REVERT
+            - REJECTION_LOG_LIST
+            - REQUIREMENT_APPROVE
+            - REQUIREMENT_AUTO_CLOSE
+            - REQUIREMENT_CLARIFICATION
+            - REQUIREMENT_CREATE
+            - REQUIREMENT_GET
+            - REQUIREMENT_LIST_BY_ROLE
+            - REQUIREMENT_RESUBMIT
+            - REQUIREMENT_SUBMIT
+            - REQUIREMENT_UPDATE
+            - ROLE_CHANGE
+            - ROLES_LIST
+            - ROLES_UPSERT
+            - SESSION_VALIDATE
+            - SETTINGS_GET
+            - SETTINGS_UPSERT
+            - SHORTLIST_DECIDE
+            - SHORTLIST_HOLD_REVERT
+            - TECH_PENDING_LIST
+            - TECH_SELECT
+            - TEMPLATE_LIST
+            - TEMPLATE_UPSERT
+            - TEST_FAIL_DECIDE
+            - TEST_LINK_CREATE
+            - TEST_QUESTIONS_GET
+            - TEST_RESULT_GET
+            - TEST_SUBMIT_PUBLIC
+            - TEST_TOKEN_VALIDATE
+            - TRAINING_ASSIGN
+            - TRAINING_DASHBOARD
+            - TRAINING_LIST
+            - TRAINING_MASTER_LIST
+            - TRAINING_MASTER_UPSERT
+            - TRAINING_STATUS_UPDATE
+            - TRAINING_SUMMARY
+            - USERS_LIST
+            - USERS_UPSERT
+            - WALKIN_SCHEDULE
+        token:
+          type: string
+          description: Session token (ST-...) for protected actions; omitted for public actions.
+        data:
+          type: object
+          additionalProperties: true
+          description: Action-specific payload.
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum: [BAD_REQUEST, AUTH_INVALID, FORBIDDEN, NOT_FOUND, CONFLICT, INTERNAL]
+        message:
+          type: string
+    ApiSuccess:
+      type: object
+      required: [ok, data]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+        data:
+          description: Action result (opaque; matches GAS behavior)
+    ApiError:
+      type: object
+      required: [ok, error]
+      properties:
+        ok:
+          type: boolean
+          enum: [false]
+        error:
+          $ref: "#/components/schemas/Error"

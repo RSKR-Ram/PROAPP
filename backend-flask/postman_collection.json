@@ -1,0 +1,108 @@
+{
+  "info": {
+    "_postman_id": "9d7c3c3f-7c7a-4b90-9e83-8b44c7d4a0f3",
+    "name": "HRMS Backend (/api dispatcher)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "idToken", "value": "TEST:admin@example.com" },
+    { "key": "sessionToken", "value": "" },
+    { "key": "templateId", "value": "" },
+    { "key": "requirementId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+      }
+    },
+    {
+      "name": "LOGIN_EXCHANGE",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/api", "host": ["{{baseUrl}}"], "path": ["api"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"LOGIN_EXCHANGE\",\n  \"token\": \"\",\n  \"data\": {\n    \"idToken\": \"{{idToken}}\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "GET_ME",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/api", "host": ["{{baseUrl}}"], "path": ["api"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"GET_ME\",\n  \"token\": \"{{sessionToken}}\",\n  \"data\": {}\n}"
+        }
+      }
+    },
+    {
+      "name": "USERS_LIST",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/api", "host": ["{{baseUrl}}"], "path": ["api"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"USERS_LIST\",\n  \"token\": \"{{sessionToken}}\",\n  \"data\": {\n    \"page\": 1,\n    \"pageSize\": 50\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "TEMPLATE_UPSERT (create)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/api", "host": ["{{baseUrl}}"], "path": ["api"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"TEMPLATE_UPSERT\",\n  \"token\": \"{{sessionToken}}\",\n  \"data\": {\n    \"jobRole\": \"CRM\",\n    \"jobTitle\": \"Customer Support\",\n    \"jd\": \"...\",\n    \"responsibilities\": \"...\",\n    \"skills\": \"...\",\n    \"shift\": \"Day\",\n    \"payScale\": \"...\",\n    \"perks\": \"...\",\n    \"notes\": \"...\",\n    \"status\": \"ACTIVE\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "REQUIREMENT_CREATE",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/api", "host": ["{{baseUrl}}"], "path": ["api"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"REQUIREMENT_CREATE\",\n  \"token\": \"{{sessionToken}}\",\n  \"data\": {\n    \"templateId\": \"{{templateId}}\",\n    \"requiredCount\": 1,\n    \"raisedFor\": \"Sales\",\n    \"concernedPerson\": \"Manager\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "REQUIREMENT_UPDATE",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/api", "host": ["{{baseUrl}}"], "path": ["api"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"REQUIREMENT_UPDATE\",\n  \"token\": \"{{sessionToken}}\",\n  \"data\": {\n    \"requirementId\": \"{{requirementId}}\",\n    \"raisedFor\": \"Sales\",\n    \"concernedPerson\": \"Manager\",\n    \"requiredCount\": 1\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "REQUIREMENT_SUBMIT",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/api", "host": ["{{baseUrl}}"], "path": ["api"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"REQUIREMENT_SUBMIT\",\n  \"token\": \"{{sessionToken}}\",\n  \"data\": {\n    \"requirementId\": \"{{requirementId}}\"\n  }\n}"
+        }
+      }
+    }
+  ]
+}
+
